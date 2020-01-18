@@ -12,21 +12,21 @@ raw = read.csv('grants.csv')
 
 ## filter only Canada
 
-raw_canada = raw %>% filter(recipient_country == 'CA')
+raw_canada = raw %>% filter(recipient_country == 'CA', recipient_type != '')
 
 ## Select relevant columns
 
 raw_columns = raw_canada %>% select(agreement_start_date, agreement_end_date,
                                     recipient_province, recipient_city,
-                                    recipient_postal_code, owner_org_title, agreement_value
-)
+                                    recipient_postal_code, owner_org_title, agreement_value, recipient_type
+                                    )
 
 ## Rename relevant columns
 
 rename = raw_columns %>% rename(Start = agreement_start_date, End = agreement_end_date, 
                                 Province = recipient_province, City = recipient_city,
                                 Postal = recipient_postal_code, Department = owner_org_title,
-                                Value = agreement_value)
+                                Value = agreement_value, Type = recipient_type)
 
 ## Clean province codes
 
@@ -39,9 +39,21 @@ province_clean = rename %>% mutate(Province = car::recode(Province, "c('QC', 'QB
                                                      c('AB', 'AB ', 'Alberta') = 'AB';
                                                      "))
 
+## Rename recipient type names via dictionary
+
+Type_dic = province_clean %>% mutate(Type = car::recode(Type, "'A' = 'Aboriginal';
+                                                        'F' = 'For-Profit';
+                                                        'G' = 'Government';
+                                                        'I' = 'International';
+                                                        'N' = 'Not-for-Profit/Charities';
+                                                        'O' = 'Other';
+                                                        'P' = 'Individual';
+                                                        'S' = 'Academia'
+                                                        "))
+
 ## Remove missing provinces
 
-province_filter = province_clean %>% filter(Province != '')
+province_filter = Type_dic %>% filter(Province != '')
 
 ## Creating new columns 
 
@@ -64,4 +76,3 @@ cleaner_zones = clean_zones %>% mutate(Zone = toupper(Zone))
 ### naming final data
 
 data = cleaner_zones
-
