@@ -12,14 +12,14 @@ raw = read.csv('grants.csv')
 
 ## filter only Canada
 
-raw_canada = raw %>% filter(recipient_country == 'CA')
+raw_canada = raw %>% filter(recipient_country == 'CA', recipient_business_number !='')
 
 ## Select relevant columns
 
 raw_columns = raw_canada %>% select(agreement_start_date, agreement_end_date,
-                                     recipient_province, recipient_city,
-                                     recipient_postal_code, owner_org_title, agreement_value
-                                     )
+                                    recipient_province, recipient_city,
+                                    recipient_postal_code, owner_org_title, agreement_value
+)
 
 ## Rename relevant columns
 
@@ -51,9 +51,17 @@ date_duration = date_years %>% mutate(Length = as.Date(End) - as.Date(Start))
 
 postal_zone = date_duration %>% mutate(Zone = substring(Postal,1,1))
 
+#### Cleaning new columns
+
+## Remove non-alphabetic postal zones
+
+clean_zones = postal_zone %>% filter(grepl('^[A-Za-z]+$', Zone))
+
+## Coerce all zones to uppercase
+
+cleaner_zones = clean_zones %>% mutate(Zone = toupper(Zone))
 
 ### naming final data
 
-data = postal_zone
-
+data = cleaner_zones
 
