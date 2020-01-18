@@ -12,7 +12,7 @@ raw = read.csv('grants.csv')
 
 ## filter only Canada
 
-raw_canada = raw %>% filter(recipient_country == 'CA', recipient_business_number !='')
+raw_canada = raw %>% filter(recipient_country == 'CA')
 
 ## Select relevant columns
 
