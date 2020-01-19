@@ -1,4 +1,6 @@
 # Candev
-Candev data Chanllenge
+Candev data Chanllenge:
 
-# This is edited by Guoly
+Team 2325: Quanhan Xi, Qianxiang Zang, Saran Vadlamudi, Linyi Guo
+
+TBS-Funding
